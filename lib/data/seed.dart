@@ -1,0 +1,111 @@
+import '../models/m.dart';
+
+List<Customer> buildSeedCustomers() => [
+  Customer(customerId:'c1', shopId:'shop1', name:'Rajesh Kumar', phone:'+91 98765 43210', email:'rajesh@email.com',
+      tier:'Gold', address:'12 MG Road, Bangalore 560001', points:1250, repairsCount:8, totalSpend:24500, isVip:true, createdAt: DateTime.now().toIso8601String(), updatedAt: DateTime.now().toIso8601String()),
+  Customer(customerId:'c2', shopId:'shop1', name:'Priya Sharma', phone:'+91 87654 32109', email:'priya@gmail.com',
+      tier:'Silver', address:'45 Park Street, Kolkata 700001', points:480, repairsCount:3, totalSpend:9800, createdAt: DateTime.now().toIso8601String(), updatedAt: DateTime.now().toIso8601String()),
+  Customer(customerId:'c3', shopId:'shop1', name:'Amit Patel', phone:'+91 76543 21098',
+      tier:'Bronze', address:'', points:90, repairsCount:1, totalSpend:1800, createdAt: DateTime.now().toIso8601String(), updatedAt: DateTime.now().toIso8601String()),
+  Customer(customerId:'c4', shopId:'shop1', name:'Sneha Mishra', phone:'+91 65432 10987', email:'sneha@outlook.com',
+      tier:'Platinum', address:'7 Marine Lines, Mumbai 400001', points:3200, repairsCount:15, totalSpend:58000, isVip:true, createdAt: DateTime.now().toIso8601String(), updatedAt: DateTime.now().toIso8601String()),
+  Customer(customerId:'c5', shopId:'shop1', name:'Vikram Singh', phone:'+91 54321 09876', tier:'Bronze', createdAt: DateTime.now().toIso8601String(), updatedAt: DateTime.now().toIso8601String()),
+];
+
+List<Product> buildSeedProducts() => [
+  Product(productId:'p1', shopId:'shop1', sku:'SCR-SAM-S24', productName:'Samsung S24 OLED Screen', category:'Spare Parts',
+      brand:'Samsung', costPrice:3200, sellingPrice:4200, stockQty:3, reorderLevel:5, createdAt: DateTime.now().toIso8601String(), updatedAt: DateTime.now().toIso8601String()),
+  Product(productId:'p2', shopId:'shop1', sku:'BAT-IPH-15P', productName:'iPhone 15 Pro Battery', category:'Spare Parts',
+      brand:'Apple', costPrice:1800, sellingPrice:2500, stockQty:8, reorderLevel:5, createdAt: DateTime.now().toIso8601String(), updatedAt: DateTime.now().toIso8601String()),
+  Product(productId:'p3', shopId:'shop1', sku:'CHR-USB-C65', productName:'65W USB-C Fast Charger', category:'Accessories',
+      brand:'Generic', costPrice:650, sellingPrice:1199, stockQty:24, reorderLevel:10, createdAt: DateTime.now().toIso8601String(), updatedAt: DateTime.now().toIso8601String()),
+  Product(productId:'p4', shopId:'shop1', sku:'PHN-SAM-A55', productName:'Samsung Galaxy A55 5G', category:'Mobile Phones',
+      brand:'Samsung', costPrice:28000, sellingPrice:34999, stockQty:2, reorderLevel:1, createdAt: DateTime.now().toIso8601String(), updatedAt: DateTime.now().toIso8601String()),
+  Product(productId:'p5', shopId:'shop1', sku:'CAB-LTNG-2M', productName:'Lightning Cable 2M Braided', category:'Accessories',
+      brand:'Generic', costPrice:180, sellingPrice:399, stockQty:0, reorderLevel:15, createdAt: DateTime.now().toIso8601String(), updatedAt: DateTime.now().toIso8601String()),
+  Product(productId:'p6', shopId:'shop1', sku:'SCR-IPH-14', productName:'iPhone 14 LCD Screen', category:'Spare Parts',
+      brand:'Apple', costPrice:2800, sellingPrice:3800, stockQty:4, reorderLevel:3, createdAt: DateTime.now().toIso8601String(), updatedAt: DateTime.now().toIso8601String()),
+];
+
+List<Technician> buildSeedTechs() => [
+  Technician(techId:'t1', shopId:'shop1', name:'Suresh Kumar', phone:'+91 99001 23456', specialization:'iOS / Android', totalJobs:18, rating:4.8, joinedAt: DateTime.now().toIso8601String()),
+  Technician(techId:'t2', shopId:'shop1', name:'Ravi Sharma', phone:'+91 99002 34567', specialization:'Screen Repair', totalJobs:14, rating:4.6, joinedAt: DateTime.now().toIso8601String()),
+  Technician(techId:'t3', shopId:'shop1', name:'Anil Mehta', phone:'+91 99003 45678', specialization:'Water Damage', totalJobs:11, rating:4.9, joinedAt: DateTime.now().toIso8601String()),
+];
+
+List<Job> buildSeedJobs() => [
+  Job(
+    jobId:'j1', jobNumber:'JOB-2025-0042', shopId:'shop1',
+    customerId:'c1', customerName:'Rajesh Kumar', customerPhone:'+91 98765 43210',
+    brand:'Samsung', model:'Galaxy S24', imei:'352099001761481', color:'Phantom Black',
+    problem:'Screen cracked, touch not working on top half',
+    status:'In Repair', priority:'Urgent', technicianId:'t1', technicianName:'Suresh Kumar',
+    laborCost:500, partsCost:3800, discountAmount:200, totalAmount: 4300,
+    partsUsed:[PartUsed(productId:'p1', name:'Samsung S24 OLED Screen', quantity:1, price:3800)],
+    notes:'Customer requested original OEM screen only',
+    intakePhotos:['📸','📸'],
+    timeline:[
+      TimelineEntry(status:'Checked In', time:'2025-02-19 10:30', by:'Reception', note:'Device received with cracked screen'),
+      TimelineEntry(status:'Diagnosed', time:'2025-02-19 11:45', by:'Suresh Kumar', note:'Screen shattered, digitizer damaged'),
+      TimelineEntry(status:'In Repair', time:'2025-02-20 09:00', by:'Suresh Kumar', note:'OEM screen arrived, starting repair'),
+    ],
+    estimatedEndDate: '2025-02-22', createdAt: '2025-02-19', updatedAt: DateTime.now().toIso8601String(),
+  ),
+  Job(
+    jobId:'j2', jobNumber:'JOB-2025-0041', shopId:'shop1',
+    customerId:'c2', customerName:'Priya Sharma', customerPhone:'+91 87654 32109',
+    brand:'Apple', model:'iPhone 15 Pro', imei:'353921094527361', color:'Natural Titanium',
+    problem:'Battery drains fast, phone heats up during charging',
+    status:'Ready for Pickup', priority:'Normal', technicianId:'t2', technicianName:'Ravi Sharma',
+    laborCost:400, partsCost:2200, discountAmount:0, totalAmount: 2600,
+    partsUsed:[PartUsed(productId:'p2', name:'iPhone 15 Pro Battery (OEM)', quantity:1, price:2200)],
+    intakePhotos:['📸','📸','📸'], completionPhotos:['📸','📸'],
+    notificationSent:true,
+    timeline:[
+      TimelineEntry(status:'Checked In', time:'2025-02-17 14:00', by:'Reception'),
+      TimelineEntry(status:'Diagnosed', time:'2025-02-17 15:30', by:'Ravi Sharma', note:'Battery health 61%'),
+      TimelineEntry(status:'In Repair', time:'2025-02-18 10:00', by:'Ravi Sharma', note:'Battery replaced'),
+      TimelineEntry(status:'Testing', time:'2025-02-18 11:30', by:'Ravi Sharma', note:'2 hour charge test'),
+      TimelineEntry(status:'QC Passed', time:'2025-02-19 09:00', by:'Suresh Kumar', note:'All functions verified'),
+      TimelineEntry(status:'Ready for Pickup', time:'2025-02-20 10:00', by:'Reception', note:'Customer notified via WhatsApp'),
+    ],
+    estimatedEndDate: '2025-02-20', createdAt: '2025-02-17', updatedAt: DateTime.now().toIso8601String(),
+  ),
+  Job(
+    jobId:'j3', jobNumber:'JOB-2025-0040', shopId:'shop1',
+    customerId:'c4', customerName:'Sneha Mishra', customerPhone:'+91 65432 10987',
+    brand:'OnePlus', model:'OnePlus 12', color:'Silky Black',
+    problem:'Charging port damaged, not charging at all',
+    status:'On Hold', priority:'Normal', technicianId:'t1', technicianName:'Suresh Kumar',
+    laborCost:300, partsCost:800, discountAmount:100, totalAmount: 1000,
+    previousStatus:'Waiting for Parts',
+    holdReason:'Customer requested pause - travelling for 1 week, will collect later',
+    notes:'Part ordered from supplier',
+    intakePhotos:['📸'],
+    timeline:[
+      TimelineEntry(status:'Checked In', time:'2025-02-15 11:00', by:'Reception'),
+      TimelineEntry(status:'Diagnosed', time:'2025-02-15 13:00', by:'Suresh Kumar', note:'USB-C port pins bent'),
+      TimelineEntry(status:'Waiting for Parts', time:'2025-02-16 09:00', by:'Suresh Kumar', note:'Part ordered'),
+      TimelineEntry(status:'On Hold', time:'2025-02-18 14:00', by:'Reception',
+          note:'Customer requested pause - travelling for 1 week', type:'hold'),
+    ],
+    estimatedEndDate: '2025-02-24', createdAt: '2025-02-15', updatedAt: DateTime.now().toIso8601String(),
+  ),
+  Job(
+    jobId:'j4', jobNumber:'JOB-2025-0039', shopId:'shop1',
+    customerId:'c3', customerName:'Amit Patel', customerPhone:'+91 76543 21098',
+    brand:'Xiaomi', model:'Redmi Note 13', color:'Mint Green',
+    problem:'Phone fell in water, not turning on',
+    status:'Cancelled', priority:'Express',
+    laborCost: 0, partsCost: 0, discountAmount: 0, totalAmount: 0,
+    previousStatus:'Checked In',
+    holdReason:'Customer cancelled - bought new phone instead',
+    intakePhotos:['📸','📸'],
+    timeline:[
+      TimelineEntry(status:'Checked In', time:'2025-02-21 08:30', by:'Reception', note:'Water damage device'),
+      TimelineEntry(status:'Cancelled', time:'2025-02-21 15:00', by:'Admin',
+          note:'Customer cancelled - bought new phone instead', type:'cancel'),
+    ],
+    estimatedEndDate: '2025-02-22', createdAt: '2025-02-21', updatedAt: DateTime.now().toIso8601String(),
+  ),
+];
