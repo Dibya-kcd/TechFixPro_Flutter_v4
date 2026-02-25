@@ -363,7 +363,7 @@ class SessionUser {
   final String role;
   final String shopId;
   final String phone;
-  final String pin_hash;
+  final String pinHash;
   final bool biometricEnabled;
   final bool isActive;
   final String lastLoginAt;
@@ -372,7 +372,7 @@ class SessionUser {
   SessionUser({
     required this.uid, required this.email, required this.displayName,
     required this.role, required this.shopId, this.phone = '',
-    this.pin_hash = '', this.biometricEnabled = false, this.isActive = true,
+    this.pinHash = '', this.biometricEnabled = false, this.isActive = true,
     this.lastLoginAt = '', required this.createdAt,
   });
 }

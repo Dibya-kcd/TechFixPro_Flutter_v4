@@ -465,7 +465,9 @@ class _ProdFormState extends ConsumerState<ProductFormScreen> {
   @override
   void dispose() {
     for (final c in [_name, _sku, _brand, _description, _supplier,
-      _cost, _price, _qty, _reorder]) c.dispose();
+      _cost, _price, _qty, _reorder]) {
+      c.dispose();
+    }
     super.dispose();
   }
 
@@ -511,6 +513,8 @@ class _ProdFormState extends ConsumerState<ProductFormScreen> {
 
   void _save() async {
     if (!_formKey.currentState!.validate()) return;
+    final messenger = ScaffoldMessenger.of(context);
+    final nav = Navigator.of(context);
     final notifier = ref.read(productsProvider.notifier);
     final existing = widget.product;
     final id = existing?.productId ?? 'p${DateTime.now().millisecondsSinceEpoch}';
@@ -568,10 +572,14 @@ class _ProdFormState extends ConsumerState<ProductFormScreen> {
         'createdAt': product.createdAt,
         'updatedAt': product.updatedAt,
       });
-      if (_isEdit) {
-        notifier.update(product);
-      } else {
-        notifier.add(product);
+      if (mounted) {
+        nav.pop();
+        messenger.showSnackBar(SnackBar(
+          content: Text(_isEdit ? 'Product updated!' : 'Product added!',
+              style: GoogleFonts.syne(fontWeight: FontWeight.w700)),
+          backgroundColor: C.green, behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        ));
       }
     } catch (_) {
       if (_isEdit) {
@@ -579,46 +587,46 @@ class _ProdFormState extends ConsumerState<ProductFormScreen> {
       } else {
         notifier.add(product);
       }
+      if (mounted) {
+        nav.pop();
+      }
     }
-    Navigator.of(context).pop();
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text(_isEdit ? 'Product updated!' : 'Product added!',
-          style: GoogleFonts.syne(fontWeight: FontWeight.w700)),
-      backgroundColor: C.green, behavior: SnackBarBehavior.floating,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-    ));
   }
 
-  void _confirmDelete() => showDialog(
-    context: context,
-    builder: (_) => AlertDialog(
-      backgroundColor: C.bgCard,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      title: Text('Delete Product?', style: GoogleFonts.syne(
-          fontWeight: FontWeight.w800, color: C.white)),
-      content: Text('Remove "${widget.product!.productName}" from inventory?',
-          style: GoogleFonts.syne(fontSize: 13, color: C.textMuted)),
-      actions: [
-        TextButton(onPressed: () => Navigator.pop(context),
-            child: Text('Cancel', style: GoogleFonts.syne(color: C.textMuted))),
-        ElevatedButton(
-          onPressed: () async {
+  void _confirmDelete() {
+    final nav = Navigator.of(context);
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: C.bgCard,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: Text('Delete Product?', style: GoogleFonts.syne(
+            fontWeight: FontWeight.w800, color: C.white)),
+        content: Text('Remove "${widget.product!.productName}" from inventory?',
+            style: GoogleFonts.syne(fontSize: 13, color: C.textMuted)),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(ctx),
+              child: Text('Cancel', style: GoogleFonts.syne(color: C.textMuted))),
+          ElevatedButton(
+            onPressed: () async {
             final id = widget.product!.productId;
             try {
               final db = FirebaseDatabase.instance;
               await db.ref('products/$id').remove();
             } catch (_) {}
             ref.read(productsProvider.notifier).delete(id);
-            Navigator.of(context).pop();
-            Navigator.of(context).pop();
+             if (!context.mounted) return;
+             Navigator.of(ctx).pop();
+             nav.pop();
           },
-          style: ElevatedButton.styleFrom(backgroundColor: C.red, foregroundColor: C.white,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
-          child: Text('Delete', style: GoogleFonts.syne(fontWeight: FontWeight.w800)),
-        ),
-      ],
-    ),
-  );
+            style: ElevatedButton.styleFrom(backgroundColor: C.red, foregroundColor: C.white,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
+            child: Text('Delete', style: GoogleFonts.syne(fontWeight: FontWeight.w800)),
+          ),
+        ],
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {

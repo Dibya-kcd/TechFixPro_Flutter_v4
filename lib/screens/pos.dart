@@ -174,10 +174,10 @@ class _POSState extends ConsumerState<POSScreen> {
               controller: _searchCtrl,
               onChanged: (v) => setState(() => _search = v),
               style: GoogleFonts.syne(fontSize: 13, color: C.text),
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 hintText: '🔍 Search or scan barcode...',
-                prefixIcon: const Icon(Icons.qr_code_scanner, color: C.textMuted, size: 20),
-                contentPadding: const EdgeInsets.symmetric(vertical: 10),
+                prefixIcon: Icon(Icons.qr_code_scanner, color: C.textMuted, size: 20),
+                contentPadding: EdgeInsets.symmetric(vertical: 10),
               ),
             ),
           ),

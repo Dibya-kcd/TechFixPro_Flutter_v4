@@ -98,7 +98,7 @@ class _CustState extends ConsumerState<CustomersScreen> {
     }).toList();
 
     assert(() {
-      print(
+      debugPrint(
         '[CustomersScreen] search="$search" tier=$_tierFilter total=${customers.length} filtered=${filtered.length} jobs=${jobs.length}',
       );
       return true;
@@ -218,6 +218,7 @@ class _CustState extends ConsumerState<CustomersScreen> {
                   onPressed: () async {
                     final shopId = session?.shopId ?? '';
                     if (shopId.isEmpty) return;
+                    final messenger = ScaffoldMessenger.of(context);
                     final db = FirebaseDatabase.instance;
                     for (final c in customers) {
                       await db.ref('customers/${c.customerId}').set({
@@ -237,7 +238,7 @@ class _CustState extends ConsumerState<CustomersScreen> {
                       });
                     }
                     if (mounted) {
-                      ScaffoldMessenger.of(context).showSnackBar(
+                      messenger.showSnackBar(
                         SnackBar(
                           content: Text(
                             'Customers migrated to cloud for $shopId',
@@ -433,7 +434,7 @@ class _CustomerDetailSheet extends StatelessWidget {
                 const SizedBox(height: 12),
                 Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                   Pill(cust.tier, color: C.tierColor(cust.tier)),
-                  if (cust.isVip) ...[const SizedBox(width: 8), Pill('VIP', color: C.yellow)],
+                  if (cust.isVip) ...[const SizedBox(width: 8), const Pill('VIP', color: C.yellow)],
                 ]),
               ]),
             ),

@@ -24,7 +24,7 @@ class _NotifySheetState extends ConsumerState<NotifySheet> {
     _msgCtrl = TextEditingController(text: _buildMessage());
 
     assert(() {
-      print(
+      debugPrint(
         '[NotifySheet] init job=${widget.job.jobId} status=${widget.job.status} total=${widget.job.totalAmount}',
       );
       return true;
@@ -57,7 +57,7 @@ class _NotifySheetState extends ConsumerState<NotifySheet> {
   Widget build(BuildContext context) {
     final j = widget.job;
     assert(() {
-      print(
+      debugPrint(
         '[NotifySheet] build channel=$_channel recipient=$_recipient job=${j.jobId}',
       );
       return true;

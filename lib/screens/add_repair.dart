@@ -259,7 +259,7 @@ class _AddRepairState extends ConsumerState<AddRepairScreen> {
       });
     }
     assert(() {
-      print(
+      debugPrint(
         '[AddRepairScreen] step=$_step cust="${_custName.text}" device="$_brand ${_model.text}"',
       );
       return true;
@@ -334,17 +334,18 @@ class _AddRepairState extends ConsumerState<AddRepairScreen> {
 
   Widget _buildStep() {
     switch (_step) {
-      case 0: return _Step1Customer();
-      case 1: return _Step2Device();
-      case 2: return _Step3Problem();
-      case 3: return _Step4Schedule();
-      case 4: return _Step5Photos();
-      default: return _Step6Review();
+      case 0: return _step1Customer();
+      case 1: return _step2Device();
+      case 2: return _step3Problem();
+      case 3: return _step4Schedule();
+      case 4: return _step5Photos();
+      case 5: return _step6Review();
+      default: return const SizedBox.shrink();
     }
   }
 
-  // ── Step 1: Customer ──────────────────────────────────────
-  Widget _Step1Customer() {
+  // ── Step 1: Customer Details ────────────────────────────────
+  Widget _step1Customer() {
     final custs = ref.watch(customersProvider);
     return SCard(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Text('👤 Customer', style: GoogleFonts.syne(
@@ -403,8 +404,8 @@ class _AddRepairState extends ConsumerState<AddRepairScreen> {
     ]));
   }
 
-  // ── Step 2: Device ────────────────────────────────────────
-  Widget _Step2Device() => SCard(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+  // ── Step 2: Device Details ──────────────────────────────────
+  Widget _step2Device() => SCard(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
     Text('📱 Device Details', style: GoogleFonts.syne(
         fontWeight: FontWeight.w800, fontSize: 16, color: C.white)),
     const SizedBox(height: 16),
@@ -441,8 +442,8 @@ class _AddRepairState extends ConsumerState<AddRepairScreen> {
           style: GoogleFonts.syne(fontSize: 12, color: C.primary))),
   ]));
 
-  // ── Step 3: Problem & Cost ────────────────────────────────
-  Widget _Step3Problem() => Column(children: [
+  // ── Step 3: Problem Description ─────────────────────────────
+  Widget _step3Problem() => Column(children: [
     SCard(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Text('🔍 Problem & Estimate', style: GoogleFonts.syne(
           fontWeight: FontWeight.w800, fontSize: 16, color: C.white)),
@@ -505,8 +506,8 @@ class _AddRepairState extends ConsumerState<AddRepairScreen> {
     ])),
   ]);
 
-  // ── Step 4: Schedule ──────────────────────────────────────
-  Widget _Step4Schedule() {
+  // ── Step 4: Schedule ───────────────────────────────────────
+  Widget _step4Schedule() {
     final techs = ref.watch(techsProvider);
     final activeTechs = techs.where((t) => t.isActive).toList();
       return SCard(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -564,8 +565,8 @@ class _AddRepairState extends ConsumerState<AddRepairScreen> {
     ]));
   }
 
-  // ── Step 5: Photos ────────────────────────────────────────
-  Widget _Step5Photos() => SCard(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+  // ── Step 5: Photos ─────────────────────────────────────────
+  Widget _step5Photos() => SCard(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
     Text('📷 Intake Photos', style: GoogleFonts.syne(
         fontWeight: FontWeight.w800, fontSize: 16, color: C.white)),
     Text('Document the device condition before repair starts',
@@ -605,8 +606,8 @@ class _AddRepairState extends ConsumerState<AddRepairScreen> {
     ),
   ]));
 
-  // ── Step 6: Review ────────────────────────────────────────
-  Widget _Step6Review() {
+  // ── Step 6: Review ─────────────────────────────────────────
+  Widget _step6Review() {
     final techs = ref.read(techsProvider);
     final techName = _techId.isEmpty ? 'Unassigned'
         : techs.firstWhere((t) => t.techId == _techId,

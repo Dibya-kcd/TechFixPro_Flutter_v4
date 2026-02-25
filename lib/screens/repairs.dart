@@ -70,7 +70,7 @@ class _RepairsState extends ConsumerState<RepairsScreen> {
         }
       }
       ref.read(jobsProvider.notifier).setAll(list);
-    } catch (e) {}
+    } catch (_) {}
   }
 
   @override
@@ -131,7 +131,7 @@ class _RepairsState extends ConsumerState<RepairsScreen> {
     };
 
     assert(() {
-      print(
+      debugPrint(
         '[RepairsScreen] tab=$tab search="$search" total=${jobs.length} filtered=${filtered.length}',
       );
       return true;
@@ -253,7 +253,7 @@ class _JobCard extends StatelessWidget {
     final isSpecial = job.isOnHold || job.isCancelled;
 
     assert(() {
-      print(
+      debugPrint(
         '[_JobCard] job=${job.jobId} status=${job.status} overdue=${job.isOverdue} hold=${job.isOnHold}',
       );
       return true;
@@ -302,10 +302,10 @@ class _JobCard extends StatelessWidget {
                         color: job.priority == 'Express' ? C.red : C.yellow,
                         small: true),
                   const SizedBox(width: 4),
-                  if (job.isOverdue) Pill('OVERDUE', color: C.red, small: true),
+                  if (job.isOverdue) const Pill('OVERDUE', color: C.red, small: true),
                   if (job.reopenCount > 0) ...[
                     const SizedBox(width: 4),
-                    Pill('Reopened', color: C.green, small: true),
+                    const Pill('Reopened', color: C.green, small: true),
                   ],
                   const Spacer(),
                   Pill('${C.statusIcon(job.status)} ${job.status}', color: sc, small: true),

@@ -124,7 +124,7 @@ class _SalesTab extends ConsumerWidget {
                 children: [
                   KpiCard(icon: '💰', value: '₹${(totalRevenue/1000).toStringAsFixed(1)}k', label: 'Revenue', sub: 'This month', color: C.green),
                   KpiCard(icon: '🛒', value: '$txCount', label: 'Transactions', sub: 'This month', color: C.primary),
-                  KpiCard(icon: '📈', value: '38%', label: 'Profit Margin', sub: 'Est.', color: C.accent),
+                  const KpiCard(icon: '📈', value: '38%', label: 'Profit Margin', sub: 'Est.', color: C.accent),
                   KpiCard(icon: '⭐', value: '₹${avgOrder.toStringAsFixed(0)}', label: 'Avg Order', sub: 'Per sale', color: C.yellow),
                 ],
               ),
@@ -473,7 +473,7 @@ class _FinanceTab extends ConsumerWidget {
     final grossRevenue = thisMonth.fold(0.0, (s, tx) => s + (tx['total'] as num).toDouble());
     final totalCost = thisMonth.fold(0.0, (s, tx) => s + ((tx['cost'] as num?) ?? 0).toDouble() * (tx['qty'] as num).toDouble());
     final grossProfit = grossRevenue - totalCost;
-    final taxRate = 0.18; // Default 18%
+    const taxRate = 0.18; // Default 18%
     final taxCollected = grossRevenue * taxRate;
     final netMargin = grossRevenue == 0 ? 0.0 : (grossProfit / grossRevenue) * 100;
 

@@ -199,7 +199,7 @@ class DashScreen extends ConsumerWidget {
                     mainAxisSpacing: 10,
                     childAspectRatio: width < 600 ? 1.1 : 1.3,
                     children: [
-                      KpiCard(icon: '💰', value: '₹1,45,820', label: "Today's Revenue", sub: '+12%', color: C.green),
+                      const KpiCard(icon: '💰', value: '₹1,45,820', label: "Today's Revenue", sub: '+12%', color: C.green),
                       KpiCard(icon: '🔧', value: '${active.length}', label: 'Active Jobs', sub: '${ready.length} ready', color: C.primary, onTap: onRepairs),
                       KpiCard(icon: '⏰', value: '${overdue.length}', label: 'Overdue', sub: 'Attention!', color: C.red, onTap: onRepairs),
                       KpiCard(icon: '📦', value: '${lowStock.length}', label: 'Low Stock', sub: 'Items', color: C.yellow, onTap: onInventory),

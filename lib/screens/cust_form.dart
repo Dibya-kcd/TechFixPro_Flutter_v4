@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:uuid/uuid.dart';
 import '../models/m.dart';
 import '../data/providers.dart';
 import '../theme/t.dart';
@@ -40,13 +41,15 @@ class _CustFormState extends ConsumerState<CustomerFormScreen> {
     super.dispose();
   }
 
-  Future<void> _save() async {
+  void _save() async {
     if (!_formKey.currentState!.validate()) return;
-    final session = ref.read(currentUserProvider).asData?.value;
-    final shopId = session?.shopId ?? '';
-    final existing = widget.customer;
-    final id = existing?.customerId ?? 'c${DateTime.now().millisecondsSinceEpoch}';
+    final messenger = ScaffoldMessenger.of(context);
+    final nav = Navigator.of(context);
     final now = DateTime.now().toIso8601String();
+    final id = _isEdit ? widget.customer!.customerId : const Uuid().v4();
+    final shopId = ref.read(currentUserProvider).asData?.value?.shopId ?? '';
+    final existing = widget.customer;
+
     final updated = (existing ?? Customer(
       customerId: id,
       shopId: shopId,
@@ -82,10 +85,14 @@ class _CustFormState extends ConsumerState<CustomerFormScreen> {
         'createdAt': updated.createdAt,
         'updatedAt': updated.updatedAt,
       });
-      if (_isEdit) {
-        ref.read(customersProvider.notifier).update(updated);
-      } else {
-        ref.read(customersProvider.notifier).add(updated);
+      if (mounted) {
+        nav.pop();
+        messenger.showSnackBar(SnackBar(
+          content: Text(_isEdit ? 'Customer updated!' : 'New customer added!',
+              style: GoogleFonts.syne(fontWeight: FontWeight.w700)),
+          backgroundColor: C.green, behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        ));
       }
     } catch (_) {
       if (_isEdit) {
@@ -93,47 +100,47 @@ class _CustFormState extends ConsumerState<CustomerFormScreen> {
       } else {
         ref.read(customersProvider.notifier).add(updated);
       }
+      if (mounted) {
+        nav.pop();
+      }
     }
-    Navigator.of(context).pop();
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text(_isEdit ? 'Customer updated!' : 'New customer added!',
-          style: GoogleFonts.syne(fontWeight: FontWeight.w700)),
-      backgroundColor: C.green, behavior: SnackBarBehavior.floating,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-    ));
   }
 
-  void _confirmDelete() => showDialog(
-    context: context,
-    builder: (_) => AlertDialog(
-      backgroundColor: C.bgCard,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      title: Text('Delete Customer?', style: GoogleFonts.syne(fontWeight: FontWeight.w800, color: C.white)),
-      content: Text(
-        'This will permanently remove ${widget.customer!.name}. Their repair history remains.',
-        style: GoogleFonts.syne(fontSize: 13, color: C.textMuted),
-      ),
-      actions: [
-        TextButton(onPressed: () => Navigator.pop(context),
-            child: Text('Cancel', style: GoogleFonts.syne(color: C.textMuted))),
-        ElevatedButton(
-          onPressed: () async {
-            final id = widget.customer!.customerId;
-            try {
-              final db = FirebaseDatabase.instance;
-              await db.ref('customers/$id').remove();
-            } catch (_) {}
-            ref.read(customersProvider.notifier).delete(id);
-            Navigator.of(context).pop();
-            Navigator.of(context).pop();
-          },
-          style: ElevatedButton.styleFrom(backgroundColor: C.red, foregroundColor: C.white,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
-          child: Text('Delete', style: GoogleFonts.syne(fontWeight: FontWeight.w800)),
-        ),
-      ],
-    ),
-  );
+  void _confirmDelete() {
+     final nav = Navigator.of(context);
+     showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+         backgroundColor: C.bgCard,
+         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+         title: Text('Delete Customer?', style: GoogleFonts.syne(fontWeight: FontWeight.w800, color: C.white)),
+         content: Text(
+           'This will permanently remove ${widget.customer!.name}. Their repair history remains.',
+           style: GoogleFonts.syne(fontSize: 13, color: C.textMuted),
+         ),
+         actions: [
+           TextButton(onPressed: () => Navigator.pop(ctx),
+               child: Text('Cancel', style: GoogleFonts.syne(color: C.textMuted))),
+           ElevatedButton(
+             onPressed: () async {
+               final id = widget.customer!.customerId;
+               try {
+                 final db = FirebaseDatabase.instance;
+                 await db.ref('customers/$id').remove();
+               } catch (_) {}
+               ref.read(customersProvider.notifier).delete(id);
+               if (!context.mounted) return;
+               Navigator.of(ctx).pop();
+               nav.pop();
+             },
+             style: ElevatedButton.styleFrom(backgroundColor: C.red, foregroundColor: C.white,
+                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
+             child: Text('Delete', style: GoogleFonts.syne(fontWeight: FontWeight.w800)),
+           ),
+         ],
+       ),
+     );
+   }
 
   @override
   Widget build(BuildContext context) {
@@ -159,8 +166,8 @@ class _CustFormState extends ConsumerState<CustomerFormScreen> {
             // Avatar
             Center(child: Container(
               width: 72, height: 72,
-              decoration: BoxDecoration(
-                gradient: const LinearGradient(colors: [C.primary, C.primaryDark]),
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(colors: [C.primary, C.primaryDark]),
                 shape: BoxShape.circle,
               ),
               child: Center(child: Text(initial,

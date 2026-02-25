@@ -618,7 +618,7 @@ class StatusProgress extends StatelessWidget {
         child: Row(children: [
           Text(C.statusIcon(status), style: const TextStyle(fontSize: 14)),
           const SizedBox(width: 8),
-          Text('Job ${status}', style: GoogleFonts.syne(
+          Text('Job $status', style: GoogleFonts.syne(
               fontSize: 12, fontWeight: FontWeight.w700,
               color: C.statusColor(status))),
         ]),

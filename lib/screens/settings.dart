@@ -336,7 +336,7 @@ class SettingsScreen extends ConsumerWidget {
                 onTap: () => _showInfoDialog(context, 'Send Feedback',
                     'Email your feedback to: feedback@techfixpro.app\n'
                     'We read every message and aim to respond within 48 hours.')),
-            SettingsTile(icon: '📱', title: 'App Version',
+            const SettingsTile(icon: '📱', title: 'App Version',
                 subtitle: 'v3.0.0  ·  Build 2025.02'),
           ]),
 
@@ -434,7 +434,9 @@ class _ShopProfileState extends ConsumerState<ShopProfilePage> {
 
   @override
   void dispose() {
-    for (final c in [_shopName, _owner, _phone, _email, _address, _gst]) c.dispose();
+    for (final c in [_shopName, _owner, _phone, _email, _address, _gst]) {
+      c.dispose();
+    }
     super.dispose();
   }
 
@@ -702,9 +704,9 @@ class _TaxPageState extends ConsumerState<TaxPage> {
                   onChanged: (v) => setState(() => _priceInclusive = v))),
         ]),
         SCard(child: Column(children: [
-          _taxRow('CGST (Central)',  '${_half}%', _half),
+          _taxRow('CGST (Central)',  '$_half%', _half),
           const Divider(color: C.border, height: 16),
-          _taxRow('SGST (State)',    '${_half}%', _half),
+          _taxRow('SGST (State)',    '$_half%', _half),
           const Divider(color: C.border, height: 16),
           _taxRow('Total GST',      '${_rate.text}%',
               double.tryParse(_rate.text) ?? 18,  bold: true),
@@ -909,7 +911,9 @@ class _TechFormState extends ConsumerState<TechFormPage> {
 
   @override
   void dispose() {
-    for (final c in [_name, _phone, _spec, _rating, _pin]) c.dispose();
+    for (final c in [_name, _phone, _spec, _rating, _pin]) {
+      c.dispose();
+    }
     super.dispose();
   }
 
@@ -949,10 +953,8 @@ class _TechFormState extends ConsumerState<TechFormPage> {
         'shopId': shopId,
         'joinedAt': tech.joinedAt.isEmpty ? DateTime.now().toIso8601String() : tech.joinedAt,
       });
-      if (_isEdit) {
-        n.update(tech);
-      } else {
-        n.add(tech);
+      if (mounted) {
+        Navigator.of(context).pop();
       }
     } catch (_) {
       if (_isEdit) {
@@ -960,8 +962,10 @@ class _TechFormState extends ConsumerState<TechFormPage> {
       } else {
         n.add(tech);
       }
+      if (mounted) {
+        Navigator.of(context).pop();
+      }
     }
-    Navigator.of(context).pop();
   }
 
   @override
@@ -1126,7 +1130,9 @@ class _WarrantyPageState extends ConsumerState<WarrantyPage> {
   @override
   void dispose() {
     _days.dispose();
-    for (final c in _rules.values) c.dispose();
+    for (final c in _rules.values) {
+      c.dispose();
+    }
     super.dispose();
   }
 

@@ -728,7 +728,7 @@ class _PartsTab extends ConsumerWidget {
         // Calculate new total
         final subtotal = job.laborCost + newPartsCost;
         final disc = job.discountAmount;
-        final taxRate = 18.0; // Default or from settings
+        const taxRate = 18.0; // Default or from settings
         final taxAmount = (subtotal - disc) * taxRate / 100;
         final newTotal = subtotal - disc + taxAmount;
 
@@ -924,7 +924,7 @@ class _AddPartDialogState extends ConsumerState<_AddPartDialog> {
       // Calculate new total
       final subtotal = job.laborCost + newPartsCost;
       final disc = job.discountAmount;
-      final taxRate = 18.0; // Default
+      const taxRate = 18.0; // Default
       final taxAmount = (subtotal - disc) * taxRate / 100;
       final newTotal = subtotal - disc + taxAmount;
 
@@ -1029,7 +1029,9 @@ class _EditTabState extends ConsumerState<_EditTab>
 
   @override
   void dispose() {
-    for (final c in [_brand, _model, _imei, _color, _problem, _notes, _parts, _labor, _discount, _tax, _start, _end]) c.dispose();
+    for (final c in [_brand, _model, _imei, _color, _problem, _notes, _parts, _labor, _discount, _tax, _start, _end]) {
+      c.dispose();
+    }
     super.dispose();
   }
 
